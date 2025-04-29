@@ -30,19 +30,19 @@ public:
     void keyPressEvent(QKeyEvent  *event);
 
 private slots:
-    void getKeyMatrixValue();
+    void get_key_matrix_value();
     void get_switch_key_value();
     void get_key_enable_value();
 
 private:
     Ui::MainWindow *ui;
-    int fd;
+    int fd_;
     int key_switch_fd_;
     int switch_enablekey_fd_;
 
-    QSocketNotifier* matrix_sock;
-    QSocketNotifier  *sockswitchkey;//模式切换
-    QSocketNotifier  *sockenablekey;//使能开关
+    QSocketNotifier* matrix_sock_;
+    QSocketNotifier  *sock_switch_key_;//模式切换
+    QSocketNotifier  *sock_enable_key_;//使能开关
     QSocketNotifier  *sock_key_rooler_;      //滚轮
 };
 

@@ -10,8 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->label_3->hide();
     ui->label_5->hide();
 
-    fd=open(DEVFILE, O_RDONLY|O_NONBLOCK);
-    if(fd < 0)
+    fd_=open(DEVFILE, O_RDONLY|O_NONBLOCK);
+    if(fd_ < 0)
     {
         qDebug()<<"/dev/input/event0 open fail.";
         exit(0);
@@ -30,14 +30,14 @@ MainWindow::MainWindow(QWidget *parent) :
         exit(0);
     }
 
-    matrix_sock = new QSocketNotifier(fd,QSocketNotifier::Read, this);
-    connect(matrix_sock, SIGNAL(activated(int)), this, SLOT(getKeyMatrixValue()));
+    matrix_sock_ = new QSocketNotifier(fd_,QSocketNotifier::Read, this);
+    connect(matrix_sock_, SIGNAL(activated(int)), this, SLOT(get_key_matrix_value()));
 
-    sockswitchkey = new QSocketNotifier(key_switch_fd_,QSocketNotifier::Read, this);
-//    connect(sockswitchkey, SIGNAL(activated(int)), this, SLOT(get_switch_key_value()));
+    sock_switch_key_ = new QSocketNotifier(key_switch_fd_,QSocketNotifier::Read, this);
+//    connect(sock_switch_key_, SIGNAL(activated(int)), this, SLOT(get_switch_key_value()));
 
-    sockenablekey = new QSocketNotifier(switch_enablekey_fd_,QSocketNotifier::Read, this);
-//    connect(sockenablekey, SIGNAL(activated(int)), this, SLOT(get_key_enable_value()));
+    sock_enable_key_ = new QSocketNotifier(switch_enablekey_fd_,QSocketNotifier::Read, this);
+//    connect(sock_enable_key_, SIGNAL(activated(int)), this, SLOT(get_key_enable_value()));
 }
 
 MainWindow::~MainWindow()
@@ -53,10 +53,10 @@ void MainWindow::keyPressEvent(QKeyEvent  *event)
 
 }
 
-void MainWindow::getKeyMatrixValue()
+void MainWindow::get_key_matrix_value()
 {
     struct input_event inputEvent;
-    unsigned int bytesRead = read(fd, &inputEvent, sizeof(inputEvent));
+    unsigned int bytesRead = read(fd_, &inputEvent, sizeof(inputEvent));
 
     if(bytesRead < sizeof(input_event))
     {
